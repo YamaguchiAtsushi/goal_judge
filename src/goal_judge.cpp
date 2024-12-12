@@ -32,7 +32,7 @@ public:
         odom_sub_ = nh_.subscribe("ypspur_ros/odom", 1000, &GoalJudge::odomCallback, this);
         amcl_sub_ = nh_.subscribe("/amcl_pose", 1000, &GoalJudge::amclPoseCallback, this);
         scan_sub_ = nh_.subscribe("/scan", 10, &GoalJudge::scanCallback, this);
-        waypoint_sub_ = nh_.subscribe("waypoint", 1000, &GoalJudge::waypointCallback, this);
+        waypoint_sub_ = nh_.subscribe("/waypoint", 1000, &GoalJudge::waypointCallback, this);
         timer_callback_ = nh_.createTimer(ros::Duration(1.0), &GoalJudge::timerCallback, this);
         
         robot_x_ = 0.0;
@@ -127,13 +127,16 @@ private:
     int GoalJudge::nearPosition(geometry_msgs::PoseStamped goal){
         double difx = robot_odom_x_ - goal.pose.position.x;
         double dify = robot_odom_y_ - goal.pose.position.y;
+        std::cout << "sqrt(difx * difx + dify * dify)" << sqrt(difx * difx + dify * dify) << std::endl;
         return (sqrt(difx * difx + dify * dify) < 0.2);
     }
 
     void GoalJudge::waypointCallback(const geometry_msgs::PoseStamped::ConstPtr &msg) {
         goal_.pose.position.x = msg->pose.position.x;
         goal_.pose.position.y = msg->pose.position.y;
-        goal_.pose.position.x = msg->pose.position.z;
+        goal_.pose.position.z = msg->pose.position.z;
+        std::cout << "msg->pose.position.x" << msg->pose.position.x << std::endl;
+        std::cout << "goal_.pose.position.x:" << goal_.pose.position.x << std::endl;
         // std::cout << "waypointCallback" << std::endl;
         // std::cout << "msg->pose.position.x:" << msg->pose.position.x << std::endl;
         // std::cout << "msg->pose.position.y:" << msg->pose.position.y << std::endl;
