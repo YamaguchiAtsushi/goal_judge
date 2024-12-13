@@ -125,8 +125,10 @@ private:
     }
 
     int GoalJudge::nearPosition(geometry_msgs::PoseStamped goal){
-        double difx = robot_odom_x_ - goal.pose.position.x;
-        double dify = robot_odom_y_ - goal.pose.position.y;
+        // double difx = robot_odom_x_ - goal.pose.position.x;
+        // double dify = robot_odom_y_ - goal.pose.position.y;
+        double difx = robot_x_ - goal.pose.position.x;
+        double dify = robot_y_ - goal.pose.position.y;
         std::cout << "sqrt(difx * difx + dify * dify)" << sqrt(difx * difx + dify * dify) << std::endl;
         return (sqrt(difx * difx + dify * dify) < 0.2);
     }
